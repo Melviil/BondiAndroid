@@ -29,6 +29,39 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        // Call functions and ask the location permissions
+        ActivityCompat.requestPermissions(this,new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
+
+        // Try is necessarry as the location persmissions can be denied
+        try{
+
+            Button button = (Button)findViewById(R.id.positionbutton);
+            button.setOnClickListener(new View.OnClickListener() {
+
+                @Override
+                public void onClick(View view) {
+                    //Create the Location service context
+                    LocationManager lm = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+                    //Get the last known location
+                    Location location = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+                    // Affichaaaaaaage
+                    double longitude = location.getLongitude();
+                    double latitude = location.getLatitude();
+                    TextView latitudeText = findViewById(R.id.latitudeTextView);
+                    latitudeText.setText("Latitude : " + Double.toString(latitude));
+                    TextView longitudeText = findViewById(R.id.longitudeTextView);
+                    longitudeText.setText("Longitude : " + Double.toString(latitude));
+
+
+                }
+            });
+        // If permissions denied, print the exception for the bebug
+        }catch(SecurityException e ){
+            Log.d("e", e.toString());
+        }
+
+    }
     private Boolean permissionsGranted() {
         return ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED;
     }
