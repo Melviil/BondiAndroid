@@ -24,11 +24,18 @@ import java.util.List;
 import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity {
-
+    DatabaseHelper myDb;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+
+
+        myDb = new DatabaseHelper(this);
+
+
+
 
         // Call functions and ask the location permissions
         ActivityCompat.requestPermissions(this,new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
@@ -46,13 +53,22 @@ public class MainActivity extends AppCompatActivity {
                     //Get the last known location
                     Location location = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
                     // Affichaaaaaaage
-                    double longitude = location.getLongitude();
-                    double latitude = location.getLatitude();
+                    String longitude = Double.toString(location.getLongitude());
+                    String latitude = Double.toString(location.getLatitude());
                     TextView latitudeText = findViewById(R.id.latitudeTextView);
-                    latitudeText.setText("Latitude : " + Double.toString(latitude));
+                    latitudeText.setText("Latitude : " + latitude);
                     TextView longitudeText = findViewById(R.id.longitudeTextView);
-                    longitudeText.setText("Longitude : " + Double.toString(latitude));
+                    longitudeText.setText("Longitude : " + latitude);
 
+                    //Insert the data inside the databse
+                    boolean inserted = myDb.insertData(latitude, longitude);
+
+                    if (inserted){
+                        Toast.makeText(MainActivity.this, "Data inserted", Toast.LENGTH_LONG).show();
+                    }else{
+                        Toast.makeText(MainActivity.this, "Data not inserted", Toast.LENGTH_LONG).show();
+
+                    }
 
                 }
             });
